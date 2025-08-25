@@ -7,12 +7,8 @@ require('dotenv').config();
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
 const widgetRoutes = require('./routes/widgets');
-const conversationRoutes = require('./routes/conversations');
-const analyticsRoutes = require('./routes/analytics');
-const webhookRoutes = require('./routes/webhooks');
-const billingRoutes = require('./routes/billing');
+const chatRoutes = require('./routes/chat');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -57,12 +53,8 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/widgets', widgetRoutes);
-app.use('/api/v1/conversations', conversationRoutes);
-app.use('/api/v1/analytics', analyticsRoutes);
-app.use('/api/v1/webhooks', webhookRoutes);
-app.use('/api/v1/billing', billingRoutes);
+app.use('/api/v1', chatRoutes);
 
 // Widget CDN endpoint (public)
 app.get('/widget/:widgetId/config', async (req, res) => {
