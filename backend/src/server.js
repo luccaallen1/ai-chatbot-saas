@@ -65,13 +65,9 @@ const PORT = process.env.PORT || 5000;
 
 // Security middleware
 app.use(helmet());
+// Temporarily disable CORS to fix Railway cache issue
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://localhost:3000',
-    'https://railway.com',
-    process.env.CLIENT_URL
-  ].filter(Boolean),
+  origin: true, // Allow all origins for now
   credentials: true
 }));
 
