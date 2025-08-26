@@ -9,12 +9,48 @@ require('dotenv').config();
 const { initDatabase } = require('./utils/initDatabase');
 initDatabase().catch(console.error);
 
-// Import routes
-const authRoutes = require('./routes/auth');
-const widgetRoutes = require('./routes/widgets');
-const chatRoutes = require('./routes/chat');
-const integrationRoutes = require('./routes/integrations');
-const onboardingRoutes = require('./routes/onboarding');
+// Import routes with error handling
+let authRoutes, widgetRoutes, chatRoutes, integrationRoutes, onboardingRoutes;
+
+try {
+  authRoutes = require('./routes/auth');
+  console.log('✅ Auth routes loaded');
+} catch (e) {
+  console.error('❌ Failed to load auth routes:', e.message);
+  authRoutes = require('express').Router();
+}
+
+try {
+  widgetRoutes = require('./routes/widgets');
+  console.log('✅ Widget routes loaded');
+} catch (e) {
+  console.error('❌ Failed to load widget routes:', e.message);
+  widgetRoutes = require('express').Router();
+}
+
+try {
+  chatRoutes = require('./routes/chat');
+  console.log('✅ Chat routes loaded');
+} catch (e) {
+  console.error('❌ Failed to load chat routes:', e.message);
+  chatRoutes = require('express').Router();
+}
+
+try {
+  integrationRoutes = require('./routes/integrations');
+  console.log('✅ Integration routes loaded');
+} catch (e) {
+  console.error('❌ Failed to load integration routes:', e.message);
+  integrationRoutes = require('express').Router();
+}
+
+try {
+  onboardingRoutes = require('./routes/onboarding');
+  console.log('✅ Onboarding routes loaded');
+} catch (e) {
+  console.error('❌ Failed to load onboarding routes:', e.message);
+  onboardingRoutes = require('express').Router();
+}
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -53,7 +89,12 @@ app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
+    routes: {
+      auth: '/api/v1/auth',
+      integrations: '/api/integrations',
+      onboarding: '/api/onboarding'
+    }
   });
 });
 
