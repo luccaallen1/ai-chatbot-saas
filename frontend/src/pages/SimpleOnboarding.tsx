@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://ai-basaas.railway.app';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
 const SimpleOnboarding: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
