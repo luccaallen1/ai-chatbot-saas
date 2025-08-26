@@ -1,0 +1,25 @@
+{
+  "name": "ai-chatbot-saas",
+  "version": "1.0.0",
+  "description": "AI Chatbot SaaS Platform - Multi-tenant chatbot solution",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "build": "cd backend && npm install && npm run build",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "chatbot",
+    "saas",
+    "ai",
+    "multi-tenant",
+    "nodejs",
+    "prisma"
+  ],
+  "author": "luccaallen1",
+  "license": "MIT"
+}
