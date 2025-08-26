@@ -5,9 +5,13 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
-// Initialize database on startup
+// Initialize database on startup (async)
 const { initDatabase } = require('./utils/initDatabase');
-initDatabase().catch(console.error);
+
+// Start database initialization but don't block server startup
+setTimeout(() => {
+  initDatabase().catch(console.error);
+}, 2000); // Wait 2 seconds for env vars to be available
 
 // Import routes with error handling
 let authRoutes, widgetRoutes, chatRoutes, integrationRoutes, onboardingRoutes;
@@ -94,12 +98,34 @@ app.get('/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
+    database_url_exists: !!process.env.DATABASE_URL,
+    port: process.env.PORT,
     routes: {
       auth: '/api/v1/auth',
       integrations: '/api/integrations',
       onboarding: '/api/onboarding'
     }
   });
+});
+
+// Database test endpoint
+app.get('/db-test', async (req, res) => {
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
+    await prisma.$connect();
+    await prisma.$disconnect();
+    res.json({
+      status: 'Database connection successful',
+      database_url: process.env.DATABASE_URL ? 'Present' : 'Missing'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'Database connection failed',
+      error: error.message,
+      database_url: process.env.DATABASE_URL ? 'Present' : 'Missing'
+    });
+  }
 });
 
 // API routes
