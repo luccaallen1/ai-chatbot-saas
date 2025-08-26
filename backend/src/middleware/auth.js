@@ -12,22 +12,21 @@ const auth = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: decoded.userId }, // Still using userId from token for compatibility
       select: {
         id: true,
         email: true,
-        name: true,
-        subscriptionPlan: true,
-        subscriptionStatus: true
+        name: true
       }
     });
 
-    if (!user) {
+    if (!tenant) {
       return res.status(401).json({ error: 'Invalid token.' });
     }
 
-    req.user = user;
+    req.tenant = tenant;
+    req.user = tenant; // Keep for compatibility
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token.' });

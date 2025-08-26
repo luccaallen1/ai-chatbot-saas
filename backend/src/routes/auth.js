@@ -15,7 +15,7 @@ const generateToken = (userId) => {
   });
 };
 
-// Register
+// Register tenant
 router.post('/register', [
   body('email').isEmail().normalizeEmail(),
   body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
@@ -29,44 +29,40 @@ router.post('/register', [
 
     const { email, password, name } = req.body;
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
+    // Check if tenant already exists
+    const existingTenant = await prisma.tenant.findUnique({
       where: { email }
     });
 
-    if (existingUser) {
-      return res.status(400).json({ error: 'User already exists with this email' });
+    if (existingTenant) {
+      return res.status(400).json({ error: 'Account already exists with this email' });
     }
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
-    const user = await prisma.user.create({
+    // Create tenant
+    const tenant = await prisma.tenant.create({
       data: {
         email,
         password: hashedPassword,
-        name,
-        subscriptionPlan: 'TRIAL',
-        subscriptionStatus: 'TRIAL'
+        name
       },
       select: {
         id: true,
         email: true,
         name: true,
-        subscriptionPlan: true,
-        subscriptionStatus: true,
         createdAt: true
       }
     });
 
     // Generate token
-    const token = generateToken(user.id);
+    const token = generateToken(tenant.id);
 
     res.status(201).json({
-      message: 'User registered successfully',
-      user,
+      message: 'Account registered successfully',
+      tenant,
       token
     });
   } catch (error) {
@@ -88,37 +84,35 @@ router.post('/login', [
 
     const { email, password } = req.body;
 
-    // Find user
-    const user = await prisma.user.findUnique({
+    // Find tenant
+    const tenant = await prisma.tenant.findUnique({
       where: { email }
     });
 
-    if (!user) {
+    if (!tenant) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     // Check password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, tenant.password);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     // Generate token
-    const token = generateToken(user.id);
+    const token = generateToken(tenant.id);
 
-    // Return user data (excluding password)
-    const userData = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      subscriptionPlan: user.subscriptionPlan,
-      subscriptionStatus: user.subscriptionStatus,
-      createdAt: user.createdAt
+    // Return tenant data (excluding password)
+    const tenantData = {
+      id: tenant.id,
+      email: tenant.email,
+      name: tenant.name,
+      createdAt: tenant.createdAt
     };
 
     res.json({
       message: 'Login successful',
-      user: userData,
+      tenant: tenantData,
       token
     });
   } catch (error) {
@@ -127,33 +121,26 @@ router.post('/login', [
   }
 });
 
-// Get current user
+// Get current tenant
 router.get('/me', auth, async (req, res) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        avatar: true,
-        subscriptionPlan: true,
-        subscriptionStatus: true,
-        isEmailVerified: true,
-        createdAt: true,
-        updatedAt: true,
-        _count: {
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: req.tenant.id },
+      include: {
+        botConfig: true,
+        integrations: {
           select: {
-            widgets: true,
-            conversations: true
+            provider: true,
+            externalId: true,
+            metadata: true
           }
         }
       }
     });
 
-    res.json(user);
+    res.json(tenant);
   } catch (error) {
-    console.error('Get user error:', error);
+    console.error('Get tenant error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

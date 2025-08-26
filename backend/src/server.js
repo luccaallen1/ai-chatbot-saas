@@ -9,6 +9,8 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const widgetRoutes = require('./routes/widgets');
 const chatRoutes = require('./routes/chat');
+const integrationRoutes = require('./routes/integrations');
+const onboardingRoutes = require('./routes/onboarding');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -55,6 +57,8 @@ app.get('/health', (req, res) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/widgets', widgetRoutes);
 app.use('/api/v1', chatRoutes);
+app.use('/api/integrations', integrationRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 // Widget CDN endpoint (public)
 app.get('/widget/:widgetId/config', async (req, res) => {
