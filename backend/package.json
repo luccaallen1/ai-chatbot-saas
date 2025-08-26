@@ -6,11 +6,17 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "build": "tsc",
+    "build": "prisma generate",
     "test": "jest",
     "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:reset": "prisma migrate reset --force",
     "seed": "node prisma/seed.js",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "express": "^4.18.2",
