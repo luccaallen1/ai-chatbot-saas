@@ -1,6 +1,6 @@
-# 🤖 AI Chatbot SaaS Platform
+# 🏥 Healthcare Appointment Booking Bot
 
-A multi-tenant SaaS platform that allows businesses to create, customize, and deploy AI-powered chatbots on their websites with zero technical knowledge.
+A specialized AI chatbot platform for healthcare clinics to handle appointment bookings, integrate with Google Calendar, and manage patient interactions through multiple channels.
 
 ## 🏗️ Architecture
 

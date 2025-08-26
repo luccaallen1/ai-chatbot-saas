@@ -1,24 +1,31 @@
 {
   "name": "ai-chatbot-saas",
   "version": "1.0.0",
-  "description": "AI Chatbot SaaS Platform - Multi-tenant chatbot solution",
-  "main": "backend/src/server.js",
+  "description": "AI Chatbot SaaS Platform - Healthcare appointment booking bot",
+  "private": true,
   "scripts": {
-    "build": "cd backend && npm install && npm run build",
-    "start": "cd backend && npm run start:prod",
-    "dev": "cd backend && npm run dev"
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install", 
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build"
   },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
   "keywords": [
+    "healthcare",
+    "appointment-booking", 
     "chatbot",
     "saas",
     "ai",
-    "multi-tenant",
-    "nodejs",
-    "prisma"
+    "multi-tenant"
   ],
   "author": "luccaallen1",
   "license": "MIT"
