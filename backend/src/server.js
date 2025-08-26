@@ -5,6 +5,10 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Initialize database on startup
+const { initDatabase } = require('./utils/initDatabase');
+initDatabase().catch(console.error);
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const widgetRoutes = require('./routes/widgets');
