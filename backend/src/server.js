@@ -179,6 +179,7 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 AI Chatbot SaaS API running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🔑 JWT Secret configured: ${!!process.env.JWT_SECRET}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
   
   if (process.env.NODE_ENV === 'development') {
